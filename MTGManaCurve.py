@@ -5,7 +5,7 @@ import random
 
 
 def keep(hand):
-    '''Works out whether you should keep hand'''
+    '''Works out whether you to keep hand'''
     if len(hand) == 7:
         return 1 < hand.count('Land') < 7
     elif len(hand) == 6:
@@ -61,9 +61,12 @@ def main():
     args = parser.parse_args()
     results = []
     options = ['Land'] + list(range(1, args.turns + 1))
+    decks_so_far = 0
     try:
-        for deck in itertools.product(options, repeat=args.size):
-            print(deck.count('Land'))
+        for deck in itertools.combinations_with_replacement(options,
+                                                            r=args.size):
+            decks_so_far += 1
+            print(deck.count('Land'), decks_so_far)
             result = mtgtest(list(deck), turns=args.turns, number=args.number)
             if len(results) < args.decks or result > min(results,
                                                          key=lambda x: x[0])[0]:
@@ -79,6 +82,6 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    import cProfile as profile
-    profile.run('main()', sort='tottime')
+    main()
+    # import cProfile as profile
+    # profile.run('main()', sort='tottime')
